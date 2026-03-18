@@ -16,24 +16,25 @@ export function TermsQuizPage() {
   const [questions, setQuestions] = useState<TermQuestion[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-  const [sessionCorrect, setSessionCorrect] = useState(0)
-  const [answeredCount, setAnsweredCount] = useState(0)
+  const [score, setScore] = useState({ correct: 0, answered: 0 })
 
   useEffect(() => {
     setQuestions(shuffleArray(TERM_QUESTIONS))
     setCurrentIndex(0)
     setSelectedIndex(null)
-    setSessionCorrect(0)
-    setAnsweredCount(0)
+    setScore({ correct: 0, answered: 0 })
   }, [])
 
   const handleSelect = (index: number) => {
     if (selectedIndex !== null) return
+    const current = questions[currentIndex]
+    if (!current) return
+    const isCorrect = index === current.correctIndex
     setSelectedIndex(index)
-    setAnsweredCount(c => c + 1)
-    if (index === questions[currentIndex].correctIndex) {
-      setSessionCorrect(c => c + 1)
-    }
+    setScore(prev => ({
+      correct: prev.correct + (isCorrect ? 1 : 0),
+      answered: prev.answered + 1
+    }))
   }
 
   const handleNext = () => {
@@ -51,8 +52,7 @@ export function TermsQuizPage() {
     setQuestions(shuffleArray(TERM_QUESTIONS))
     setCurrentIndex(0)
     setSelectedIndex(null)
-    setSessionCorrect(0)
-    setAnsweredCount(0)
+    setScore({ correct: 0, answered: 0 })
   }
 
   if (questions.length === 0) return null
@@ -70,7 +70,7 @@ export function TermsQuizPage() {
             問題 {currentIndex + 1} / {questions.length}
           </span>
           <span className="session-score">
-            正解: {sessionCorrect} / {answeredCount}
+            正解: {score.correct} / {score.answered}
           </span>
         </div>
       </header>

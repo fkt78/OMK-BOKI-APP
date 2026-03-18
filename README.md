@@ -38,6 +38,16 @@ npm run build
 npm run preview
 ```
 
+## バージョン管理
+
+バージョン番号はメイン画面のフッターに表示されます。コード変更時にバージョンを更新するには：
+
+```bash
+npm run version:patch   # 1.0.0 → 1.0.1（軽微な修正）
+npm run version:minor   # 1.0.0 → 1.1.0（新機能追加）
+npm run version:major   # 1.0.0 → 2.0.0（大きな変更）
+```
+
 ## 問題の追加
 
 `src/data/journalEntries.ts` に仕訳テンプレートを追加することで、問題数を増やせます。

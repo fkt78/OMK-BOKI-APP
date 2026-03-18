@@ -54,6 +54,7 @@ export function HomePage() {
 
       <footer className="home-footer">
         <p>PWA対応：オフラインでも学習可能。ホーム画面に追加してご利用ください。</p>
+        <p className="version-info">v{__APP_VERSION__}</p>
       </footer>
     </div>
   )

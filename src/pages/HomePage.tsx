@@ -25,18 +25,18 @@ export function HomePage() {
           <span className="menu-card__badge">NEW</span>
         </Link>
 
-        <Link to="/q2-account" className="menu-card menu-card--disabled">
+        <Link to="/q2-account" className="menu-card">
           <span className="menu-card__icon">📐</span>
           <h2>第2問：勘定記入</h2>
           <p>T字勘定の空欄を埋める。本番形式</p>
-          <span className="menu-card__badge">準備中</span>
+          <span className="menu-card__badge">NEW</span>
         </Link>
 
-        <Link to="/q2-books" className="menu-card menu-card--disabled">
+        <Link to="/q2-books" className="menu-card">
           <span className="menu-card__icon">📒</span>
           <h2>第2問：補助簿</h2>
-          <p>現金出納帳・仕入帳・売上帳などの記入</p>
-          <span className="menu-card__badge">準備中</span>
+          <p>現金出納帳の記入。本番形式</p>
+          <span className="menu-card__badge">NEW</span>
         </Link>
 
         <Link to="/accounts" className="menu-card">
@@ -45,11 +45,11 @@ export function HomePage() {
           <p>資産・負債・純資産・収益・費用の分類</p>
         </Link>
 
-        <Link to="/trial-balance" className="menu-card menu-card--disabled">
+        <Link to="/trial-balance" className="menu-card">
           <span className="menu-card__icon">📊</span>
           <h2>第3問：精算表・試算表</h2>
-          <p>総合問題。決算整理を含む</p>
-          <span className="menu-card__badge">準備中</span>
+          <p>合計試算表の借方・貸方合計を求める</p>
+          <span className="menu-card__badge">NEW</span>
         </Link>
       </nav>
 

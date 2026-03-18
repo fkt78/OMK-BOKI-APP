@@ -58,16 +58,19 @@
 
 .transactions-table th:last-child,
 .transactions-table td:last-child,
+.transactions-table td.num,
 .t-account-table th:last-child,
-.t-account-table td:last-child {
-  text-align: right;
-}
-
-.transactions-table th:nth-child(3),
-.transactions-table td:nth-child(3),
+.t-account-table td:last-child,
 .t-account-table th:nth-child(3),
 .t-account-table td:nth-child(3) {
   text-align: right;
+}
+
+.transactions-hint {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 12px;
+  opacity: 0.9;
 }
 
 .t-account-table input {

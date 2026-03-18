@@ -116,13 +116,13 @@ export function AccountEntryPage() {
       <main className="entry-main">
         <div className="transactions-box">
           <h3>次の取引について、{problem.accountName}勘定に記入しなさい。</h3>
+          <p className="transactions-hint">取引の内容から、借方・貸方のどちらに記入するか考えて入力してください。</p>
           <table className="transactions-table">
             <thead>
               <tr>
                 <th>日付</th>
                 <th>摘要</th>
-                <th>借方</th>
-                <th>貸方</th>
+                <th>金額</th>
               </tr>
             </thead>
             <tbody>
@@ -130,8 +130,7 @@ export function AccountEntryPage() {
                 <tr key={i}>
                   <td>{t.date}</td>
                   <td>{t.description}</td>
-                  <td>{t.debit != null ? t.debit.toLocaleString() : ''}</td>
-                  <td>{t.credit != null ? t.credit.toLocaleString() : ''}</td>
+                  <td className="num">{t.amount.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

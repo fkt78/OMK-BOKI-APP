@@ -103,6 +103,21 @@ export function AccountEntryPage() {
   const formatNum = (n: number | null) =>
     n === null ? '' : n.toLocaleString()
 
+  /** 不正解の行とその解説 */
+  const wrongRows =
+    showResult && !isCorrect
+      ? problem.answer
+          .map((row, i) => {
+            const user = userAnswers[i]
+            if (!user) return null
+            const debitMatch = (user.debit ?? null) === (row.debit ?? null)
+            const creditMatch = (user.credit ?? null) === (row.credit ?? null)
+            if (debitMatch && creditMatch) return null
+            return { ...row, index: i }
+          })
+          .filter((r): r is NonNullable<typeof r> => r != null)
+      : []
+
   return (
     <div className="account-entry-page">
       <header className="entry-header">
@@ -159,7 +174,7 @@ export function AccountEntryPage() {
                       value={formatNum(row.debit)}
                       onChange={e => handleInputChange(i, 'debit', e.target.value)}
                       disabled={showResult}
-                      className={showResult && row.debit !== problem.answer[i].debit ? 'input-wrong' : ''}
+                      className={showResult && (userAnswers[i]?.debit ?? null) !== (problem.answer[i]?.debit ?? null) ? 'input-wrong' : ''}
                     />
                   </td>
                   <td>
@@ -168,7 +183,7 @@ export function AccountEntryPage() {
                       value={formatNum(row.credit)}
                       onChange={e => handleInputChange(i, 'credit', e.target.value)}
                       disabled={showResult}
-                      className={showResult && row.credit !== problem.answer[i].credit ? 'input-wrong' : ''}
+                      className={showResult && (userAnswers[i]?.credit ?? null) !== (problem.answer[i]?.credit ?? null) ? 'input-wrong' : ''}
                     />
                   </td>
                 </tr>
@@ -178,9 +193,26 @@ export function AccountEntryPage() {
         </div>
 
         {showResult && (
-          <div className={`result-message result-${isCorrect ? 'correct' : 'incorrect'}`}>
-            {isCorrect ? '✓ 正解です！' : '✗ 不正解です。正しい金額を確認してください。'}
-          </div>
+          <>
+            <div className={`result-message result-${isCorrect ? 'correct' : 'incorrect'}`}>
+              {isCorrect ? '✓ 正解です！' : '✗ 不正解です。正しい金額を確認してください。'}
+            </div>
+            {!isCorrect && wrongRows.length > 0 && (
+              <div className="explanation-box">
+                <h4>解説</h4>
+                <ul>
+                  {wrongRows.map((row, idx) => (
+                    <li key={idx}>
+                      <strong>{row.date} {row.description}</strong>
+                      {row.explanation && (
+                        <span className="explanation-text">：{row.explanation}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
         )}
 
         <div className="action-buttons">

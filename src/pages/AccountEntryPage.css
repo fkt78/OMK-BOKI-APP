@@ -110,6 +110,41 @@
   color: var(--error);
 }
 
+.explanation-box {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.explanation-box h4 {
+  font-size: 15px;
+  margin: 0 0 12px;
+  color: var(--text-h);
+}
+
+.explanation-box ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.explanation-box li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.explanation-box li:last-child {
+  margin-bottom: 0;
+}
+
+.explanation-text {
+  font-weight: normal;
+}
+
 .action-buttons {
   margin-bottom: 20px;
 }

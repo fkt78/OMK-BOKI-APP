@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   generateProblemPool,
@@ -26,6 +26,8 @@ export function JournalPracticePage() {
   const [userCredit, setUserCredit] = useState('')
   const [result, setResult] = useState<'correct' | 'incorrect' | null>(null)
   const [sessionCorrect, setSessionCorrect] = useState(0)
+  const [answeredCount, setAnsweredCount] = useState(0)
+  const lastCountedIndexRef = useRef<number>(-1)
   const [showExplanation, setShowExplanation] = useState(false)
   const [progress, setProgress] = useState<SessionProgress>(() => {
     try {
@@ -48,6 +50,8 @@ export function JournalPracticePage() {
     setUserCredit('')
     setResult(null)
     setSessionCorrect(0)
+    setAnsweredCount(0)
+    lastCountedIndexRef.current = -1
     setShowExplanation(false)
   }, [])
 
@@ -80,7 +84,14 @@ export function JournalPracticePage() {
     )
     setResult(correct ? 'correct' : 'incorrect')
     setShowExplanation(true)
-    if (correct) setSessionCorrect(c => c + 1)
+    // 同じ問題のリトライでは answeredCount を増やさない
+    if (lastCountedIndexRef.current !== currentIndex) {
+      lastCountedIndexRef.current = currentIndex
+      setAnsweredCount(c => c + 1)
+    }
+    if (correct) {
+      setSessionCorrect(c => c + 1)
+    }
     saveProgress(correct)
   }
 
@@ -117,7 +128,7 @@ export function JournalPracticePage() {
             問題 {currentIndex + 1} / {problems.length}
           </span>
           <span className="session-score">
-            正解: {sessionCorrect} / {currentIndex + (result ? 1 : 0)}
+            正解: {sessionCorrect} / {answeredCount}
           </span>
         </div>
         <div className="total-progress">

@@ -33,6 +33,14 @@
   opacity: 0.9;
 }
 
+.version-badge {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 1;
+}
+
 .menu-grid {
   display: grid;
   gap: 16px;
@@ -133,8 +141,3 @@
   margin: 0;
 }
 
-.home-footer .version-info {
-  margin-top: 12px;
-  font-size: 12px;
-  opacity: 0.6;
-}

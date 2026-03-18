@@ -7,6 +7,7 @@ export function HomePage() {
       <header className="home-header">
         <h1>簿記3級 学習アプリ</h1>
         <p className="subtitle">日商簿記3級合格を目指して、繰り返し学習</p>
+        <p className="version-badge">v{__APP_VERSION__}</p>
       </header>
 
       <nav className="menu-grid">
@@ -54,7 +55,6 @@ export function HomePage() {
 
       <footer className="home-footer">
         <p>PWA対応：オフラインでも学習可能。ホーム画面に追加してご利用ください。</p>
-        <p className="version-info">v{__APP_VERSION__}</p>
       </footer>
     </div>
   )

@@ -21,6 +21,7 @@ export const ACCOUNT_CATEGORIES: Record<AccountCategory, string> = {
 export const ACCOUNTS: AccountType[] = [
   // 資産
   { name: '現金', category: 'asset', categoryName: '資産' },
+  { name: '小口現金', category: 'asset', categoryName: '資産' },
   { name: '当座預金', category: 'asset', categoryName: '資産' },
   { name: '普通預金', category: 'asset', categoryName: '資産' },
   { name: '売掛金', category: 'asset', categoryName: '資産' },
@@ -66,6 +67,13 @@ export const ACCOUNTS: AccountType[] = [
   { name: '雑費', category: 'expense', categoryName: '費用' },
   { name: '支払家賃', category: 'expense', categoryName: '費用' },
   { name: '支払保険料', category: 'expense', categoryName: '費用' },
+  { name: '広告宣伝費', category: 'expense', categoryName: '費用' },
+  { name: '接待交際費', category: 'expense', categoryName: '費用' },
+  { name: '水道光熱費', category: 'expense', categoryName: '費用' },
+  { name: '修繕費', category: 'expense', categoryName: '費用' },
+  { name: '有価証券', category: 'asset', categoryName: '資産' },
+  { name: '固定資産売却損', category: 'expense', categoryName: '費用' },
+  { name: '固定資産売却益', category: 'revenue', categoryName: '収益' },
   { name: '貸倒損失', category: 'expense', categoryName: '費用' },
   { name: '貸倒引当金繰入', category: 'expense', categoryName: '費用' },
   { name: '貸倒引当金', category: 'liability', categoryName: '負債' }, // 評価勘定

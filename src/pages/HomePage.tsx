@@ -12,29 +12,42 @@ export function HomePage() {
       <nav className="menu-grid">
         <Link to="/journal" className="menu-card menu-card--primary">
           <span className="menu-card__icon">📝</span>
-          <h2>仕訳練習</h2>
-          <p>第1問対策。2,000問以上のパターンで繰り返し練習</p>
+          <h2>第1問：仕訳練習</h2>
+          <p>15問・45点。3,000問以上のパターンで繰り返し練習</p>
           <span className="menu-card__badge">メイン</span>
         </Link>
 
-        <Link to="/accounts" className="menu-card menu-card--disabled">
+        <Link to="/q2-terms" className="menu-card">
+          <span className="menu-card__icon">📋</span>
+          <h2>第2問：用語選択</h2>
+          <p>本番形式の4択問題。簿記用語をマスター</p>
+          <span className="menu-card__badge">NEW</span>
+        </Link>
+
+        <Link to="/q2-account" className="menu-card menu-card--disabled">
+          <span className="menu-card__icon">📐</span>
+          <h2>第2問：勘定記入</h2>
+          <p>T字勘定の空欄を埋める。本番形式</p>
+          <span className="menu-card__badge">準備中</span>
+        </Link>
+
+        <Link to="/q2-books" className="menu-card menu-card--disabled">
+          <span className="menu-card__icon">📒</span>
+          <h2>第2問：補助簿</h2>
+          <p>現金出納帳・仕入帳・売上帳などの記入</p>
+          <span className="menu-card__badge">準備中</span>
+        </Link>
+
+        <Link to="/accounts" className="menu-card">
           <span className="menu-card__icon">📋</span>
           <h2>勘定科目</h2>
-          <p>資産・負債・純資産・収益・費用の分類を学習</p>
-          <span className="menu-card__badge">準備中</span>
+          <p>資産・負債・純資産・収益・費用の分類</p>
         </Link>
 
         <Link to="/trial-balance" className="menu-card menu-card--disabled">
           <span className="menu-card__icon">📊</span>
-          <h2>精算表・試算表</h2>
-          <p>第3問対策。総合問題の練習</p>
-          <span className="menu-card__badge">準備中</span>
-        </Link>
-
-        <Link to="/closing" className="menu-card menu-card--disabled">
-          <span className="menu-card__icon">📑</span>
-          <h2>決算整理</h2>
-          <p>繰延・見越・減価償却などの練習</p>
+          <h2>第3問：精算表・試算表</h2>
+          <p>総合問題。決算整理を含む</p>
           <span className="menu-card__badge">準備中</span>
         </Link>
       </nav>

@@ -131,4 +131,43 @@ export const JOURNAL_ENTRY_TEMPLATES: JournalEntryTemplate[] = [
   { id: 'extra-018', question: '売掛金￥{amount}を小切手で回収した。', debit: '当座預金', credit: '売掛金', explanation: '小切手での回収は当座預金の増加と売掛金の減少。', category: '手形取引' },
   { id: 'extra-019', question: '商品￥{amount}を現金で仕入れ、支払運賃は仕入に含めて計上した。', debit: '仕入', credit: '現金', explanation: '仕入に運賃を含める場合。仕入（費用）の増加と現金の減少。', category: '商品売買', amountOptions: [25000, 55000, 105000] },
   { id: 'extra-020', question: '繰越利益剰余金￥{amount}を資本金に振り替えた。', debit: '繰越利益剰余金', credit: '資本金', explanation: '利益の資本金への組み入れ。繰越利益剰余金の減少と資本金の増加。', category: 'その他', amountOptions: [100000, 500000, 1000000] },
+
+  // === 広告宣伝費・接待交際費・その他費用 ===
+  { id: 'expense-001', question: '広告宣伝費￥{amount}を現金で支払った。', debit: '広告宣伝費', credit: '現金', explanation: '広告宣伝費は費用の増加（借方）、現金の支払いは資産の減少（貸方）。', category: 'その他費用' },
+  { id: 'expense-002', question: '接待交際費￥{amount}を現金で支払った。', debit: '接待交際費', credit: '現金', explanation: '接待交際費は費用の増加（借方）、現金の支払いは資産の減少（貸方）。', category: 'その他費用' },
+  { id: 'expense-003', question: '水道光熱費￥{amount}を現金で支払った。', debit: '水道光熱費', credit: '現金', explanation: '水道光熱費は費用の増加（借方）、現金の支払いは資産の減少（貸方）。', category: 'その他費用' },
+  { id: 'expense-004', question: '修繕費￥{amount}を現金で支払った。', debit: '修繕費', credit: '現金', explanation: '修繕費は費用の増加（借方）、現金の支払いは資産の減少（貸方）。', category: 'その他費用' },
+  { id: 'expense-005', question: '広告宣伝費￥{amount}を当座預金から支払った。', debit: '広告宣伝費', credit: '当座預金', explanation: '広告宣伝費は費用の増加、当座預金の支払いは資産の減少。', category: 'その他費用' },
+  { id: 'expense-006', question: '接待交際費￥{amount}を掛けで支払った。', debit: '接待交際費', credit: '未払金', explanation: '接待交際費は費用の増加、未払金は負債の増加。', category: 'その他費用' },
+  { id: 'expense-007', question: '水道光熱費￥{amount}を普通預金から支払った。', debit: '水道光熱費', credit: '普通預金', explanation: '水道光熱費は費用の増加、普通預金の支払いは資産の減少。', category: 'その他費用' },
+
+  // === 有価証券 ===
+  { id: 'security-001', question: '有価証券￥{amount}を現金で購入した。', debit: '有価証券', credit: '現金', explanation: '有価証券の購入は資産の増加（借方）、現金の支払いは資産の減少（貸方）。', category: '有価証券' },
+  { id: 'security-002', question: '有価証券￥{amount}を現金で売却した。', debit: '現金', credit: '有価証券', explanation: '有価証券の売却は有価証券（資産）の減少と現金の増加。', category: '有価証券' },
+  { id: 'security-003', question: '有価証券￥{amount}を当座預金で購入した。', debit: '有価証券', credit: '当座預金', explanation: '有価証券の購入は資産の増加、当座預金の支払いは資産の減少。', category: '有価証券' },
+  { id: 'security-004', question: '有価証券￥{amount}を普通預金で売却した。', debit: '普通預金', credit: '有価証券', explanation: '有価証券の売却は有価証券の減少と普通預金の増加。', category: '有価証券' },
+
+  // === 固定資産の売却 ===
+  { id: 'sale-001', question: '備品（帳簿価額￥{amount}）を￥{amount}で現金売却した。', debit: '現金', credit: '備品', explanation: '帳簿価額と同額での売却。備品の減少と現金の増加。', category: '固定資産売却', amountOptions: [50000, 100000, 200000] },
+  { id: 'sale-002', question: '不要となった備品（帳簿価額￥{amount}）を除却した。', debit: '減価償却費', credit: '備品', explanation: '除却時は減価償却費（未償却残高）と備品の減少。※直接法で残存価額ゼロの場合', category: '固定資産売却', amountOptions: [50000, 100000] },
+  { id: 'sale-003', question: '車両運搬具（帳簿価額￥{amount}）を￥{amount}で現金売却した。', debit: '現金', credit: '車両運搬具', explanation: '帳簿価額と同額での売却。車両の減少と現金の増加。', category: '固定資産売却', amountOptions: [200000, 300000, 500000] },
+
+  // === 手形の不渡り ===
+  { id: 'dishonor-001', question: '支払手形￥{amount}が不渡りとなり、買掛金に戻した。', debit: '支払手形', credit: '買掛金', explanation: '手形不渡り時は元の取引に戻す。支払手形の減少と買掛金の増加。', category: '手形取引' },
+  { id: 'dishonor-002', question: '受取手形￥{amount}が不渡りとなり、売掛金に戻した。', debit: '売掛金', credit: '受取手形', explanation: '手形不渡り時は元の取引に戻す。売掛金の増加と受取手形の減少。', category: '手形取引' },
+
+  // === 資本金・引出 ===
+  { id: 'capital-001', question: '店主が￥{amount}を現金で引出した。', debit: '資本金', credit: '現金', explanation: '引出は資本の減少。資本金の減少（借方）、現金の減少（貸方）。', category: '資本金' },
+  { id: 'capital-002', question: '店主が￥{amount}を現金で事業に追加出資した。', debit: '現金', credit: '資本金', explanation: '追加出資は資本の増加。現金の増加（借方）、資本金の増加（貸方）。', category: '資本金' },
+  { id: 'capital-003', question: '借入金￥{amount}を現金で返済した。', debit: '借入金', credit: '現金', explanation: '借入金の返済は負債の減少（借方）、現金の支払いは資産の減少（貸方）。', category: '資本金' },
+
+  // === 商品の返品・値引 ===
+  { id: 'return-001', question: '仕入れた商品￥{amount}を返品した。', debit: '買掛金', credit: '仕入', explanation: '仕入戻し。仕入の取消（貸方）と買掛金の減少（借方）。', category: '商品売買' },
+  { id: 'return-002', question: '売り上げた商品￥{amount}が返品された。', debit: '売上', credit: '売掛金', explanation: '売上戻し。売上の取消（借方）と売掛金の減少（貸方）。', category: '商品売買' },
+  { id: 'return-003', question: '売上に￥{amount}の値引をした。', debit: '売上', credit: '売掛金', explanation: '売上値引。売上の減少（借方）と売掛金の減少（貸方）。', category: '商品売買', amountOptions: [1000, 2000, 5000] },
+  { id: 'return-004', question: '仕入に￥{amount}の値引を受けた。', debit: '買掛金', credit: '仕入', explanation: '仕入値引。仕入の減少（貸方）と買掛金の減少（借方）。', category: '商品売買', amountOptions: [1000, 2000, 5000] },
+
+  // === 小口現金 ===
+  { id: 'petty-001', question: '小口現金係に￥{amount}を渡した。', debit: '小口現金', credit: '現金', explanation: '小口現金の前渡し。小口現金（資産）の増加と現金の減少。', category: '現金取引' },
+  { id: 'petty-002', question: '小口現金で消耗品￥{amount}を購入した。', debit: '消耗品費', credit: '小口現金', explanation: '小口現金での支払。消耗品費の増加と小口現金の減少。', category: '現金取引' },
 ]

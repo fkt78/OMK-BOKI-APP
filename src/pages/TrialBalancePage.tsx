@@ -64,8 +64,12 @@ export function TrialBalancePage() {
   if (problems.length === 0) return null
 
   const problem = problems[currentIndex]
-  const correctDebit = problem.rows.reduce((s, r) => s + r.debit, 0)
-  const correctCredit = problem.rows.reduce((s, r) => s + r.credit, 0)
+  const correctDebit = problem.rows
+    .filter(r => r.side === 'debit')
+    .reduce((s, r) => s + r.amount, 0)
+  const correctCredit = problem.rows
+    .filter(r => r.side === 'credit')
+    .reduce((s, r) => s + r.amount, 0)
   const isCorrect =
     showResult &&
     userTotals.debit === correctDebit &&
@@ -83,7 +87,8 @@ export function TrialBalancePage() {
 
       <main className="tb-main">
         <div className="tb-instruction">
-          <p>次の合計試算表について、借方合計と貸方合計を求めなさい。</p>
+          <p>次の各勘定の残高について、借方合計と貸方合計を求めなさい。</p>
+          <p className="tb-hint">勘定科目の性質（資産・費用→借方、負債・純資産・収益→貸方）から判断してください。</p>
         </div>
 
         <div className="tb-table-box">
@@ -92,20 +97,14 @@ export function TrialBalancePage() {
             <thead>
               <tr>
                 <th>勘定科目</th>
-                <th>借方</th>
-                <th>貸方</th>
+                <th>残高</th>
               </tr>
             </thead>
             <tbody>
               {problem.rows.map((row, i) => (
                 <tr key={i}>
                   <td>{row.accountName}</td>
-                  <td className="num">
-                    {row.debit > 0 ? row.debit.toLocaleString() : ''}
-                  </td>
-                  <td className="num">
-                    {row.credit > 0 ? row.credit.toLocaleString() : ''}
-                  </td>
+                  <td className="num">{row.amount.toLocaleString()}</td>
                 </tr>
               ))}
               <tr className="total-row">

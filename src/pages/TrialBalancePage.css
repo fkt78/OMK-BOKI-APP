@@ -40,6 +40,12 @@
   margin: 0;
 }
 
+.tb-hint {
+  font-size: 13px;
+  margin-top: 8px !important;
+  opacity: 0.9;
+}
+
 .tb-table-box {
   background: var(--bg-elevated);
   border: 1px solid var(--border);

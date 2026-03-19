@@ -4,6 +4,7 @@ import {
   TRIAL_BALANCE_PROBLEMS,
   type TrialBalanceProblem
 } from '../data/trialBalanceProblems'
+import { recordStats } from '../utils/statsStorage'
 import './TrialBalancePage.css'
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -42,6 +43,9 @@ export function TrialBalancePage() {
   }
 
   const checkAnswer = () => {
+    const correct =
+      userTotals.debit === correctDebit && userTotals.credit === correctCredit
+    recordStats('trialBalance', correct)
     setShowResult(true)
   }
 

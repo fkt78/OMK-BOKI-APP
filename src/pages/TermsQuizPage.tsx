@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { TERM_QUESTIONS, type TermQuestion } from '../data/termQuestions'
+import { recordStats } from '../utils/statsStorage'
 import './TermsQuizPage.css'
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -30,6 +31,7 @@ export function TermsQuizPage() {
     const current = questions[currentIndex]
     if (!current) return
     const isCorrect = index === current.correctIndex
+    recordStats('terms', isCorrect)
     setSelectedIndex(index)
     setScore(prev => ({
       correct: prev.correct + (isCorrect ? 1 : 0),

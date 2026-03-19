@@ -11,7 +11,14 @@ export function HomePage() {
       </header>
 
       <nav className="menu-grid">
-        <Link to="/journal" className="menu-card menu-card--primary">
+        <Link to="/dashboard" className="menu-card menu-card--primary">
+          <span className="menu-card__icon">📈</span>
+          <h2>学習ダッシュボード</h2>
+          <p>今日の学習状況・成長グラフ・CSV出力</p>
+          <span className="menu-card__badge">NEW</span>
+        </Link>
+
+        <Link to="/journal" className="menu-card">
           <span className="menu-card__icon">📝</span>
           <h2>第1問：仕訳練習</h2>
           <p>15問・45点。3,000問以上のパターンで繰り返し練習</p>

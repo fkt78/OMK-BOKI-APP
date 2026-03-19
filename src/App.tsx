@@ -6,6 +6,7 @@ import { AccountsPage } from './pages/AccountsPage'
 import { AccountEntryPage } from './pages/AccountEntryPage'
 import { CashBookPage } from './pages/CashBookPage'
 import { TrialBalancePage } from './pages/TrialBalancePage'
+import { DashboardPage } from './pages/DashboardPage'
 import './App.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
         <Route path="/q2-books" element={<CashBookPage />} />
         <Route path="/accounts" element={<AccountsPage />} />
         <Route path="/trial-balance" element={<TrialBalancePage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   )

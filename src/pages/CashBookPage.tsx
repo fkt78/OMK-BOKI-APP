@@ -5,6 +5,7 @@ import {
   type CashBookProblem,
   type CashBookRow
 } from '../data/cashBookProblems'
+import { recordStats } from '../utils/statsStorage'
 import './CashBookPage.css'
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -62,6 +63,16 @@ export function CashBookPage() {
   }
 
   const checkAnswer = () => {
+    const correct = problem.answer.every((row, i) => {
+      const user = userAnswers[i]
+      if (!user) return false
+      return (
+        (user.income ?? null) === (row.income ?? null) &&
+        (user.expense ?? null) === (row.expense ?? null) &&
+        user.balance === row.balance
+      )
+    })
+    recordStats('cashBook', correct)
     setShowResult(true)
   }
 

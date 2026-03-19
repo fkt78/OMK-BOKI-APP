@@ -5,6 +5,7 @@ import {
   type AccountEntryProblem,
   type AccountEntryRow
 } from '../data/accountEntryProblems'
+import { recordStats } from '../utils/statsStorage'
 import './AccountEntryPage.css'
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -55,6 +56,14 @@ export function AccountEntryPage() {
   }
 
   const checkAnswer = () => {
+    const correct = problem.answer.every((row, i) => {
+      const user = userAnswers[i]
+      if (!user) return false
+      const debitMatch = (user.debit ?? null) === (row.debit ?? null)
+      const creditMatch = (user.credit ?? null) === (row.credit ?? null)
+      return debitMatch && creditMatch
+    })
+    recordStats('accountEntry', correct)
     setShowResult(true)
   }
 

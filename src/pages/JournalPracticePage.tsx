@@ -6,6 +6,7 @@ import {
   checkAnswer,
   type JournalProblem
 } from '../utils/problemGenerator'
+import { recordStats } from '../utils/statsStorage'
 import { getAllAccountNames } from '../data/accountTypes'
 import './JournalPracticePage.css'
 
@@ -93,6 +94,7 @@ export function JournalPracticePage() {
       setSessionCorrect(c => c + 1)
     }
     saveProgress(correct)
+    recordStats('journal', correct)
   }
 
   const handleNext = () => {

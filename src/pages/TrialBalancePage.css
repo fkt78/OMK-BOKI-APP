@@ -41,7 +41,7 @@
 }
 
 .tb-table-box {
-  background: var(--code-bg);
+  background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -79,17 +79,18 @@
 .tb-table .total-row input {
   width: 100%;
   min-width: 80px;
-  min-height: var(--touch-target, 44px);
+  min-height: var(--touch-target);
   padding: 10px 12px;
   font-size: 16px;
   font-weight: 600;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--bg);
+  color: var(--text-h);
 }
 
 .tb-table .total-row input:disabled {
-  background: var(--code-bg);
+  background: var(--bg-pressed);
   cursor: default;
 }
 
@@ -106,13 +107,13 @@
 }
 
 .result-correct {
-  background: rgba(25, 135, 84, 0.15);
-  color: var(--success);
+  background: rgba(29, 185, 84, 0.2);
+  color: var(--accent);
 }
 
 .result-incorrect {
-  background: rgba(220, 53, 69, 0.15);
-  color: var(--error);
+  background: rgba(233, 20, 41, 0.2);
+  color: #ff6b6b;
 }
 
 .action-buttons {

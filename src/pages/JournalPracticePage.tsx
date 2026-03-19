@@ -204,8 +204,13 @@ export function JournalPracticePage() {
           <div className="action-buttons">
             {result === null ? (
               <button
+                type="button"
                 className="btn btn-primary"
-                onClick={handleSubmit}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handleSubmit()
+                }}
                 disabled={!userDebit.trim() || !userCredit.trim()}
               >
                 採点する

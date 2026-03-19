@@ -21,13 +21,11 @@ export function AccountEntryPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [userAnswers, setUserAnswers] = useState<AccountEntryRow[]>([])
   const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState({ correct: 0, answered: 0 })
 
   useEffect(() => {
     setProblems(shuffleArray(ACCOUNT_ENTRY_PROBLEMS))
     setCurrentIndex(0)
     setShowResult(false)
-    setScore({ correct: 0, answered: 0 })
   }, [])
 
   useEffect(() => {
@@ -57,19 +55,7 @@ export function AccountEntryPage() {
   }
 
   const checkAnswer = () => {
-    const problem = problems[currentIndex]
-    const correct = problem.answer.every((row, i) => {
-      const user = userAnswers[i]
-      if (!user) return false
-      const debitMatch = (user.debit ?? null) === (row.debit ?? null)
-      const creditMatch = (user.credit ?? null) === (row.credit ?? null)
-      return debitMatch && creditMatch
-    })
     setShowResult(true)
-    setScore(prev => ({
-      correct: prev.correct + (correct ? 1 : 0),
-      answered: prev.answered + 1
-    }))
   }
 
   const handleNext = () => {
@@ -86,7 +72,6 @@ export function AccountEntryPage() {
     setProblems(shuffleArray(ACCOUNT_ENTRY_PROBLEMS))
     setCurrentIndex(0)
     setShowResult(false)
-    setScore({ correct: 0, answered: 0 })
   }
 
   if (problems.length === 0) return null
@@ -124,7 +109,6 @@ export function AccountEntryPage() {
         <Link to="/" className="back-link">← ホーム</Link>
         <div className="progress-info">
           <span>問題 {currentIndex + 1} / {problems.length}</span>
-          <span>正解: {score.correct} / {score.answered}</span>
         </div>
       </header>
 
@@ -217,11 +201,19 @@ export function AccountEntryPage() {
 
         <div className="action-buttons">
           {!showResult ? (
-            <button className="btn btn-primary" onClick={checkAnswer}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                checkAnswer()
+              }}
+            >
               採点する
             </button>
           ) : (
-            <button className="btn btn-primary" onClick={handleNext}>
+            <button type="button" className="btn btn-primary" onClick={handleNext}>
               {currentIndex < problems.length - 1 ? '次の問題' : 'もう一度'}
             </button>
           )}
@@ -229,7 +221,7 @@ export function AccountEntryPage() {
       </main>
 
       <div className="quick-actions">
-        <button className="btn btn-outline" onClick={handleRetry}>
+        <button type="button" className="btn btn-outline" onClick={handleRetry}>
           新しい問題セット
         </button>
       </div>

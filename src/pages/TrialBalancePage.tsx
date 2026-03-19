@@ -20,13 +20,11 @@ export function TrialBalancePage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [userTotals, setUserTotals] = useState({ debit: 0, credit: 0 })
   const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState({ correct: 0, answered: 0 })
 
   useEffect(() => {
     setProblems(shuffleArray(TRIAL_BALANCE_PROBLEMS))
     setCurrentIndex(0)
     setShowResult(false)
-    setScore({ correct: 0, answered: 0 })
   }, [])
 
   useEffect(() => {
@@ -44,16 +42,7 @@ export function TrialBalancePage() {
   }
 
   const checkAnswer = () => {
-    const problem = problems[currentIndex]
-    const correctDebit = problem.rows.reduce((s, r) => s + r.debit, 0)
-    const correctCredit = problem.rows.reduce((s, r) => s + r.credit, 0)
-    const correct =
-      userTotals.debit === correctDebit && userTotals.credit === correctCredit
     setShowResult(true)
-    setScore(prev => ({
-      correct: prev.correct + (correct ? 1 : 0),
-      answered: prev.answered + 1
-    }))
   }
 
   const handleNext = () => {
@@ -70,7 +59,6 @@ export function TrialBalancePage() {
     setProblems(shuffleArray(TRIAL_BALANCE_PROBLEMS))
     setCurrentIndex(0)
     setShowResult(false)
-    setScore({ correct: 0, answered: 0 })
   }
 
   if (problems.length === 0) return null
@@ -90,7 +78,6 @@ export function TrialBalancePage() {
         <h1>第3問：試算表</h1>
         <div className="progress-info">
           <span>問題 {currentIndex + 1} / {problems.length}</span>
-          <span>正解: {score.correct} / {score.answered}</span>
         </div>
       </header>
 
@@ -172,11 +159,19 @@ export function TrialBalancePage() {
 
         <div className="action-buttons">
           {!showResult ? (
-            <button className="btn btn-primary" onClick={checkAnswer}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                checkAnswer()
+              }}
+            >
               採点する
             </button>
           ) : (
-            <button className="btn btn-primary" onClick={handleNext}>
+            <button type="button" className="btn btn-primary" onClick={handleNext}>
               {currentIndex < problems.length - 1 ? '次の問題' : 'もう一度'}
             </button>
           )}
@@ -184,7 +179,7 @@ export function TrialBalancePage() {
       </main>
 
       <div className="quick-actions">
-        <button className="btn btn-outline" onClick={handleRetry}>
+        <button type="button" className="btn btn-outline" onClick={handleRetry}>
           新しい問題セット
         </button>
       </div>

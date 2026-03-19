@@ -19,8 +19,11 @@
   font-weight: 700;
   border-radius: 500px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease;
   border: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .btn-primary {
@@ -30,7 +33,6 @@
 
 .btn-primary:hover:not(:disabled) {
   background: var(--accent-hover, #1ed760);
-  transform: scale(1.02);
 }
 
 .btn-outline {
@@ -44,6 +46,11 @@
   color: var(--text-h);
 }
 
-.btn:active {
-  transform: scale(0.98);
+.btn:active:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }

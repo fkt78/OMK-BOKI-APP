@@ -79,8 +79,9 @@
 .tb-table .total-row input {
   width: 100%;
   min-width: 80px;
-  padding: 8px 10px;
-  font-size: 14px;
+  min-height: var(--touch-target, 44px);
+  padding: 10px 12px;
+  font-size: 16px;
   font-weight: 600;
   border: 1px solid var(--border);
   border-radius: 6px;

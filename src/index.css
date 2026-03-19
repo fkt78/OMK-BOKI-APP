@@ -1,3 +1,4 @@
+/* Human Interface Guidelines 準拠 */
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -13,11 +14,21 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+  /* HIG: タッチターゲット最小 44px */
+  --touch-target: 44px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 40px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
+  font: 18px/1.5 var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
@@ -103,7 +114,36 @@ code,
 
 code {
   font-size: 15px;
-  line-height: 135%;
+  line-height: 1.35;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+/* HIG: フォーカス可視性（アクセシビリティ） */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* HIG: ボタン・入力の最小タッチターゲット */
+.btn,
+button[type="button"],
+button[type="submit"],
+input[type="text"],
+input[type="number"],
+select {
+  min-height: var(--touch-target);
+}
+
+/* HIG: タップ時のハイライト除去（モバイル） */
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
 }

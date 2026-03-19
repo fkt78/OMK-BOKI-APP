@@ -1,4 +1,4 @@
-/* 簿記学習アプリ グローバルスタイル */
+/* 簿記学習アプリ グローバルスタイル（HIG 準拠） */
 * {
   box-sizing: border-box;
 }
@@ -9,4 +9,18 @@
   margin: 0;
   text-align: left;
   border: none;
+}
+
+/* HIG: ボタン共通 - 最小タッチターゲット 44px */
+.btn {
+  min-height: var(--touch-target, 44px);
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: var(--radius-sm, 8px);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.98);
 }

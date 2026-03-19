@@ -76,10 +76,11 @@
 .t-account-table input {
   width: 100%;
   min-width: 60px;
-  padding: 6px 8px;
-  font-size: 14px;
+  min-height: var(--touch-target, 44px);
+  padding: 10px 12px;
+  font-size: 16px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 8px);
   background: var(--bg);
 }
 

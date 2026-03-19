@@ -113,13 +113,13 @@ export function CashBookPage() {
         <div className="transactions-box">
           <h3>次の取引を現金出納帳に記入しなさい。</h3>
           <p className="opening">前月繰越残高：{problem.openingBalance.toLocaleString()}円</p>
+          <p className="transactions-hint">取引の内容から、収入・支出のどちらに記入するか考えて入力してください。残高も計算して記入してください。</p>
           <table className="transactions-table">
             <thead>
               <tr>
                 <th>日付</th>
                 <th>摘要</th>
-                <th>収入</th>
-                <th>支出</th>
+                <th>金額</th>
               </tr>
             </thead>
             <tbody>
@@ -127,8 +127,7 @@ export function CashBookPage() {
                 <tr key={i}>
                   <td>{t.date}</td>
                   <td>{t.description}</td>
-                  <td>{t.type === 'income' ? t.amount.toLocaleString() : ''}</td>
-                  <td>{t.type === 'expense' ? t.amount.toLocaleString() : ''}</td>
+                  <td className="num">{t.amount.toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

@@ -48,8 +48,19 @@
 
 .opening {
   font-size: 14px;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   color: var(--text);
+}
+
+.transactions-hint {
+  font-size: 13px;
+  color: var(--text);
+  margin: 0 0 12px;
+  opacity: 0.9;
+}
+
+.transactions-table td.num {
+  text-align: right;
 }
 
 .transactions-table,

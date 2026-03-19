@@ -10,7 +10,7 @@ export function HomePage() {
         <p className="version-badge">v{__APP_VERSION__}</p>
       </header>
 
-      <nav className="menu-grid">
+      <nav className="menu-grid" aria-label="メインメニュー">
         <Link to="/dashboard" className="menu-card menu-card--primary">
           <span className="menu-card__icon">📈</span>
           <h2>学習ダッシュボード</h2>

@@ -214,17 +214,18 @@ export function JournalPracticePage() {
                   handleSubmit()
                 }}
                 disabled={!userDebit.trim() || !userCredit.trim()}
+                title={!userDebit.trim() || !userCredit.trim() ? '借方と貸方の両方に入力してください' : undefined}
               >
                 採点する
               </button>
             ) : (
               <>
                 {result === 'incorrect' && (
-                  <button className="btn btn-secondary" onClick={handleRetry}>
+                  <button type="button" className="btn btn-secondary" onClick={handleRetry}>
                     もう一度
                   </button>
                 )}
-                <button className="btn btn-primary" onClick={handleNext}>
+                <button type="button" className="btn btn-primary" onClick={handleNext}>
                   {isLast ? '次の15問へ' : '次の問題'}
                 </button>
               </>
@@ -234,7 +235,7 @@ export function JournalPracticePage() {
       </main>
 
       <div className="quick-actions">
-        <button className="btn btn-outline" onClick={loadProblems}>
+        <button type="button" className="btn btn-outline" onClick={loadProblems}>
           新しい問題セット（15問）
         </button>
       </div>

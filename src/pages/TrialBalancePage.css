@@ -119,11 +119,13 @@
 
 .result-incorrect {
   background: rgba(233, 20, 41, 0.2);
-  color: #ff6b6b;
+  color: var(--error);
 }
 
 .action-buttons {
   margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .action-buttons .btn {

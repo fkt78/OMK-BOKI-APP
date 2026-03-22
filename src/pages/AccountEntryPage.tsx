@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ACCOUNT_ENTRY_PROBLEMS,
@@ -17,43 +17,47 @@ function shuffleArray<T>(array: T[]): T[] {
   return result
 }
 
+function emptyUserAnswers(problem: AccountEntryProblem): AccountEntryRow[] {
+  return problem.answer.map(row => ({
+    date: row.date,
+    description: row.description,
+    debit: null,
+    credit: null
+  }))
+}
+
+function createAccountEntrySession(): {
+  problems: AccountEntryProblem[]
+  currentIndex: number
+  userAnswers: AccountEntryRow[]
+  showResult: boolean
+} {
+  const problems = shuffleArray(ACCOUNT_ENTRY_PROBLEMS)
+  return {
+    problems,
+    currentIndex: 0,
+    userAnswers: emptyUserAnswers(problems[0]),
+    showResult: false
+  }
+}
+
 export function AccountEntryPage() {
-  const [problems, setProblems] = useState<AccountEntryProblem[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [userAnswers, setUserAnswers] = useState<AccountEntryRow[]>([])
-  const [showResult, setShowResult] = useState(false)
-
-  useEffect(() => {
-    setProblems(shuffleArray(ACCOUNT_ENTRY_PROBLEMS))
-    setCurrentIndex(0)
-    setShowResult(false)
-  }, [])
-
-  useEffect(() => {
-    if (problems.length > 0) {
-      const problem = problems[currentIndex]
-      setUserAnswers(
-        problem.answer.map(row => ({
-          date: row.date,
-          description: row.description,
-          debit: null,
-          credit: null
-        }))
-      )
-      setShowResult(false)
-    }
-  }, [problems, currentIndex])
+  const [state, setState] = useState(createAccountEntrySession)
+  const { problems, currentIndex, userAnswers, showResult } = state
 
   const handleInputChange = (rowIndex: number, field: 'debit' | 'credit', value: string) => {
     if (showResult) return
     const num = value === '' ? null : parseInt(value.replace(/,/g, ''), 10)
     if (value !== '' && isNaN(num!)) return
-    setUserAnswers(prev =>
-      prev.map((row, i) =>
+    setState(prev => ({
+      ...prev,
+      userAnswers: prev.userAnswers.map((row, i) =>
         i === rowIndex ? { ...row, [field]: num } : row
       )
-    )
+    }))
   }
+
+  const problem = problems[currentIndex]
 
   const checkAnswer = () => {
     const correct = problem.answer.every((row, i) => {
@@ -64,28 +68,36 @@ export function AccountEntryPage() {
       return debitMatch && creditMatch
     })
     recordStats('accountEntry', correct)
-    setShowResult(true)
+    setState(prev => ({ ...prev, showResult: true }))
   }
 
   const handleNext = () => {
-    if (currentIndex < problems.length - 1) {
-      setCurrentIndex(i => i + 1)
-    } else {
-      setProblems(shuffleArray(ACCOUNT_ENTRY_PROBLEMS))
-      setCurrentIndex(0)
-    }
-    setShowResult(false)
+    setState(prev => {
+      if (prev.currentIndex < prev.problems.length - 1) {
+        const nextIndex = prev.currentIndex + 1
+        const nextProblem = prev.problems[nextIndex]
+        return {
+          ...prev,
+          currentIndex: nextIndex,
+          userAnswers: emptyUserAnswers(nextProblem),
+          showResult: false
+        }
+      }
+      const newProblems = shuffleArray(ACCOUNT_ENTRY_PROBLEMS)
+      return {
+        ...prev,
+        problems: newProblems,
+        currentIndex: 0,
+        userAnswers: emptyUserAnswers(newProblems[0]),
+        showResult: false
+      }
+    })
   }
 
   const handleRetry = () => {
-    setProblems(shuffleArray(ACCOUNT_ENTRY_PROBLEMS))
-    setCurrentIndex(0)
-    setShowResult(false)
+    setState(createAccountEntrySession())
   }
 
-  if (problems.length === 0) return null
-
-  const problem = problems[currentIndex]
   const isCorrect = showResult &&
     problem.answer.every((row, i) => {
       const user = userAnswers[i]

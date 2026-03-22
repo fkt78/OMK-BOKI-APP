@@ -2,6 +2,8 @@
  * 学習統計の記録・CSV出力・取り込み
  */
 
+import { safeParseDashboardStats } from './storageValidation'
+
 export type StatsCategory = 'journal' | 'terms' | 'accountEntry' | 'cashBook' | 'trialBalance'
 
 export interface CategoryStats {
@@ -27,7 +29,7 @@ function getToday(): string {
 function loadAll(): Record<string, DailyStats> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : {}
+    return safeParseDashboardStats(raw)
   } catch {
     return {}
   }
@@ -84,7 +86,10 @@ export function exportToCSV(): string {
   return '\uFEFF' + lines.join('\n')
 }
 
-/** CSVからインポート（既存データにマージ） */
+/**
+ * CSVからインポート（同一日付・同一カテゴリは既存数値に加算）。
+ * 同じファイルを繰り返し取り込むと解答数が二重計上されるため、バックアップ復元時のみの利用を推奨。
+ */
 export function importFromCSV(csvText: string): { success: number; errors: string[] } {
   const errors: string[] = []
   const lines = csvText.trim().split(/\r?\n/).filter(Boolean)
@@ -119,10 +124,11 @@ export function importFromCSV(csvText: string): { success: number; errors: strin
   return { success, errors }
 }
 
-function mergeStats(_a?: CategoryStats, b?: CategoryStats): CategoryStats {
+/** 既存の日次統計とCSVの行を加算マージ（別端末のバックアップを足し込む想定） */
+function mergeStats(a?: CategoryStats, b?: CategoryStats): CategoryStats {
   return {
-    attempted: b?.attempted ?? 0,
-    correct: b?.correct ?? 0
+    attempted: (a?.attempted ?? 0) + (b?.attempted ?? 0),
+    correct: (a?.correct ?? 0) + (b?.correct ?? 0)
   }
 }
 

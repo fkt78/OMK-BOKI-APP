@@ -1,9 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  TRIAL_BALANCE_PROBLEMS,
-  type TrialBalanceProblem
-} from '../data/trialBalanceProblems'
+import { TRIAL_BALANCE_PROBLEMS } from '../data/trialBalanceProblems'
 import { recordStats } from '../utils/statsStorage'
 import './TrialBalancePage.css'
 
@@ -17,23 +14,10 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export function TrialBalancePage() {
-  const [problems, setProblems] = useState<TrialBalanceProblem[]>([])
+  const [problems, setProblems] = useState(() => shuffleArray(TRIAL_BALANCE_PROBLEMS))
   const [currentIndex, setCurrentIndex] = useState(0)
   const [userTotals, setUserTotals] = useState({ debit: 0, credit: 0 })
   const [showResult, setShowResult] = useState(false)
-
-  useEffect(() => {
-    setProblems(shuffleArray(TRIAL_BALANCE_PROBLEMS))
-    setCurrentIndex(0)
-    setShowResult(false)
-  }, [])
-
-  useEffect(() => {
-    if (problems.length > 0) {
-      setUserTotals({ debit: 0, credit: 0 })
-      setShowResult(false)
-    }
-  }, [problems, currentIndex])
 
   const handleInputChange = (field: 'debit' | 'credit', value: string) => {
     if (showResult) return
@@ -52,20 +36,22 @@ export function TrialBalancePage() {
   const handleNext = () => {
     if (currentIndex < problems.length - 1) {
       setCurrentIndex(i => i + 1)
+      setUserTotals({ debit: 0, credit: 0 })
+      setShowResult(false)
     } else {
       setProblems(shuffleArray(TRIAL_BALANCE_PROBLEMS))
       setCurrentIndex(0)
+      setUserTotals({ debit: 0, credit: 0 })
+      setShowResult(false)
     }
-    setShowResult(false)
   }
 
   const handleRetry = () => {
     setProblems(shuffleArray(TRIAL_BALANCE_PROBLEMS))
     setCurrentIndex(0)
+    setUserTotals({ debit: 0, credit: 0 })
     setShowResult(false)
   }
-
-  if (problems.length === 0) return null
 
   const problem = problems[currentIndex]
   const correctDebit = problem.rows
@@ -101,14 +87,20 @@ export function TrialBalancePage() {
             <thead>
               <tr>
                 <th>勘定科目</th>
-                <th>残高</th>
+                <th>借方</th>
+                <th>貸方</th>
               </tr>
             </thead>
             <tbody>
               {problem.rows.map((row, i) => (
                 <tr key={i}>
                   <td>{row.accountName}</td>
-                  <td className="num">{row.amount.toLocaleString()}</td>
+                  <td className="num">
+                    {row.side === 'debit' ? row.amount.toLocaleString() : ''}
+                  </td>
+                  <td className="num">
+                    {row.side === 'credit' ? row.amount.toLocaleString() : ''}
+                  </td>
                 </tr>
               ))}
               <tr className="total-row">

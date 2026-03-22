@@ -121,18 +121,6 @@ export function getRandomProblems(
 }
 
 /**
- * カテゴリ別に問題を取得
- */
-export function getProblemsByCategory(
-  pool: JournalProblem[],
-  category: string,
-  count: number
-): JournalProblem[] {
-  const filtered = pool.filter(p => p.category === category)
-  return getRandomProblems(filtered, Math.min(count, filtered.length))
-}
-
-/**
  * Fisher-Yates シャッフル
  */
 function shuffleArray<T>(array: T[]): T[] {

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { TERM_QUESTIONS, type TermQuestion } from '../data/termQuestions'
+import { TERM_QUESTIONS } from '../data/termQuestions'
 import { recordStats } from '../utils/statsStorage'
 import './TermsQuizPage.css'
 
@@ -14,17 +14,10 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export function TermsQuizPage() {
-  const [questions, setQuestions] = useState<TermQuestion[]>([])
+  const [questions, setQuestions] = useState(() => shuffleArray(TERM_QUESTIONS))
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [score, setScore] = useState({ correct: 0, answered: 0 })
-
-  useEffect(() => {
-    setQuestions(shuffleArray(TERM_QUESTIONS))
-    setCurrentIndex(0)
-    setSelectedIndex(null)
-    setScore({ correct: 0, answered: 0 })
-  }, [])
 
   const handleSelect = (index: number) => {
     if (selectedIndex !== null) return
@@ -56,8 +49,6 @@ export function TermsQuizPage() {
     setSelectedIndex(null)
     setScore({ correct: 0, answered: 0 })
   }
-
-  if (questions.length === 0) return null
 
   const current = questions[currentIndex]
   const isCorrect = selectedIndex === current.correctIndex

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CASH_BOOK_PROBLEMS,
@@ -17,33 +17,34 @@ function shuffleArray<T>(array: T[]): T[] {
   return result
 }
 
+function emptyCashBookRows(problem: CashBookProblem): CashBookRow[] {
+  return problem.answer.map((row, i) => ({
+    date: row.date,
+    description: row.description,
+    income: null,
+    expense: null,
+    balance: i === 0 ? problem.openingBalance : 0
+  }))
+}
+
+function createCashBookSession(): {
+  problems: CashBookProblem[]
+  currentIndex: number
+  userAnswers: CashBookRow[]
+  showResult: boolean
+} {
+  const problems = shuffleArray(CASH_BOOK_PROBLEMS)
+  return {
+    problems,
+    currentIndex: 0,
+    userAnswers: emptyCashBookRows(problems[0]),
+    showResult: false
+  }
+}
+
 export function CashBookPage() {
-  const [problems, setProblems] = useState<CashBookProblem[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [userAnswers, setUserAnswers] = useState<CashBookRow[]>([])
-  const [showResult, setShowResult] = useState(false)
-
-  useEffect(() => {
-    setProblems(shuffleArray(CASH_BOOK_PROBLEMS))
-    setCurrentIndex(0)
-    setShowResult(false)
-  }, [])
-
-  useEffect(() => {
-    if (problems.length > 0) {
-      const problem = problems[currentIndex]
-      setUserAnswers(
-        problem.answer.map((row, i) => ({
-          date: row.date,
-          description: row.description,
-          income: i === 0 ? null : null,
-          expense: i === 0 ? null : null,
-          balance: i === 0 ? problem.openingBalance : 0
-        }))
-      )
-      setShowResult(false)
-    }
-  }, [problems, currentIndex])
+  const [state, setState] = useState(createCashBookSession)
+  const { problems, currentIndex, userAnswers, showResult } = state
 
   const handleInputChange = (
     rowIndex: number,
@@ -53,14 +54,17 @@ export function CashBookPage() {
     if (showResult) return
     const num = value === '' ? null : parseInt(value.replace(/,/g, ''), 10)
     if (value !== '' && (isNaN(num!) || num! < 0)) return
-    setUserAnswers(prev =>
-      prev.map((row, i) =>
+    setState(prev => ({
+      ...prev,
+      userAnswers: prev.userAnswers.map((row, i) =>
         i === rowIndex
           ? { ...row, [field]: num ?? (field === 'balance' ? 0 : null) }
           : row
       )
-    )
+    }))
   }
+
+  const problem = problems[currentIndex]
 
   const checkAnswer = () => {
     const correct = problem.answer.every((row, i) => {
@@ -73,28 +77,36 @@ export function CashBookPage() {
       )
     })
     recordStats('cashBook', correct)
-    setShowResult(true)
+    setState(prev => ({ ...prev, showResult: true }))
   }
 
   const handleNext = () => {
-    if (currentIndex < problems.length - 1) {
-      setCurrentIndex(i => i + 1)
-    } else {
-      setProblems(shuffleArray(CASH_BOOK_PROBLEMS))
-      setCurrentIndex(0)
-    }
-    setShowResult(false)
+    setState(prev => {
+      if (prev.currentIndex < prev.problems.length - 1) {
+        const nextIndex = prev.currentIndex + 1
+        const nextProblem = prev.problems[nextIndex]
+        return {
+          ...prev,
+          currentIndex: nextIndex,
+          userAnswers: emptyCashBookRows(nextProblem),
+          showResult: false
+        }
+      }
+      const newProblems = shuffleArray(CASH_BOOK_PROBLEMS)
+      return {
+        ...prev,
+        problems: newProblems,
+        currentIndex: 0,
+        userAnswers: emptyCashBookRows(newProblems[0]),
+        showResult: false
+      }
+    })
   }
 
   const handleRetry = () => {
-    setProblems(shuffleArray(CASH_BOOK_PROBLEMS))
-    setCurrentIndex(0)
-    setShowResult(false)
+    setState(createCashBookSession())
   }
 
-  if (problems.length === 0) return null
-
-  const problem = problems[currentIndex]
   const isCorrect =
     showResult &&
     problem.answer.every((row, i) => {

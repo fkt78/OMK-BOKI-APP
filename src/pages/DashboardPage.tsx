@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   getAllStats,
@@ -14,17 +14,13 @@ import './DashboardPage.css'
 const CATEGORIES: StatsCategory[] = ['journal', 'terms', 'accountEntry', 'cashBook', 'trialBalance']
 
 export function DashboardPage() {
-  const [stats, setStats] = useState<DailyStats[]>([])
+  const [stats, setStats] = useState<DailyStats[]>(() => getAllStats())
   const [importResult, setImportResult] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const refresh = () => {
     setStats(getAllStats())
   }
-
-  useEffect(() => {
-    refresh()
-  }, [])
 
   const today = getTodayStats()
 
@@ -58,7 +54,8 @@ export function DashboardPage() {
     e.target.value = ''
   }
 
-  const chartData = stats.slice(-14).reverse()
+  /** 日付昇順のまま（上＝古い日・下＝新しい日） */
+  const chartData = stats.slice(-14)
 
   return (
     <div className="dashboard-page">

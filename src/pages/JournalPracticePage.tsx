@@ -7,17 +7,15 @@ import {
   type JournalProblem
 } from '../utils/problemGenerator'
 import { recordStats } from '../utils/statsStorage'
+import {
+  safeParseJournalProgress,
+  type JournalSessionProgress
+} from '../utils/storageValidation'
 import { getAllAccountNames } from '../data/accountTypes'
 import './JournalPracticePage.css'
 
 const PROBLEMS_PER_SESSION = 15
 const STORAGE_KEY = 'boki3-journal-progress'
-
-interface SessionProgress {
-  totalAttempted: number
-  totalCorrect: number
-  lastPracticed?: string
-}
 
 /** プールと問題を一括生成（pool と problems の整合を保つ） */
 function createNewSession(): { pool: JournalProblem[]; problems: JournalProblem[] } {
@@ -46,14 +44,9 @@ export function JournalPracticePage() {
   const [showExplanation, setShowExplanation] = useState(false)
   /** 借方・貸方未入力で採点したときの案内（datalist 選択で onChange が飛ぶ環境対策でボタンは常に有効） */
   const [inputHint, setInputHint] = useState<string | null>(null)
-  const [progress, setProgress] = useState<SessionProgress>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      return saved ? JSON.parse(saved) : { totalAttempted: 0, totalCorrect: 0 }
-    } catch {
-      return { totalAttempted: 0, totalCorrect: 0 }
-    }
-  })
+  const [progress, setProgress] = useState<JournalSessionProgress>(() =>
+    safeParseJournalProgress(localStorage.getItem(STORAGE_KEY))
+  )
 
   const accountNames = getAllAccountNames()
 
@@ -100,10 +93,10 @@ export function JournalPracticePage() {
     // 同じ問題のリトライでは answeredCount を増やさない
     if (lastCountedIndexRef.current !== currentIndex) {
       lastCountedIndexRef.current = currentIndex
-      setAnsweredCount(c => c + 1)
+      setAnsweredCount(prev => prev + 1)
     }
     if (correct) {
-      setSessionCorrect(c => c + 1)
+      setSessionCorrect(prev => prev + 1)
     }
     saveProgress(correct)
     recordStats('journal', correct)

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import {
   generateProblemPool,
@@ -19,9 +19,23 @@ interface SessionProgress {
   lastPracticed?: string
 }
 
+/** プールと問題を一括生成（pool と problems の整合を保つ） */
+function createNewSession(): { pool: JournalProblem[]; problems: JournalProblem[] } {
+  const problemPool = generateProblemPool()
+  return {
+    pool: problemPool,
+    problems: getRandomProblems(problemPool, PROBLEMS_PER_SESSION)
+  }
+}
+
 export function JournalPracticePage() {
-  const [pool, setPool] = useState<JournalProblem[]>([])
-  const [problems, setProblems] = useState<JournalProblem[]>([])
+  /**
+   * useEffect + loadProblems での初回読み込みは React Strict Mode で effect が2回走り、
+   * 入力中に loadProblems が再度実行されて借方・貸方が空に戻る（問題1だけ入力できないように見える）。
+   * 初回は useState の遅延初期化のみで1回だけ生成する。
+   */
+  const [session, setSession] = useState(createNewSession)
+  const { problems } = session
   const [currentIndex, setCurrentIndex] = useState(0)
   const [userDebit, setUserDebit] = useState('')
   const [userCredit, setUserCredit] = useState('')
@@ -30,6 +44,8 @@ export function JournalPracticePage() {
   const [answeredCount, setAnsweredCount] = useState(0)
   const lastCountedIndexRef = useRef<number>(-1)
   const [showExplanation, setShowExplanation] = useState(false)
+  /** 借方・貸方未入力で採点したときの案内（datalist 選択で onChange が飛ぶ環境対策でボタンは常に有効） */
+  const [inputHint, setInputHint] = useState<string | null>(null)
   const [progress, setProgress] = useState<SessionProgress>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY)
@@ -42,10 +58,7 @@ export function JournalPracticePage() {
   const accountNames = getAllAccountNames()
 
   const loadProblems = useCallback(() => {
-    const problemPool = generateProblemPool()
-    setPool(problemPool)
-    const newProblems = getRandomProblems(problemPool, PROBLEMS_PER_SESSION)
-    setProblems(newProblems)
+    setSession(createNewSession())
     setCurrentIndex(0)
     setUserDebit('')
     setUserCredit('')
@@ -54,13 +67,8 @@ export function JournalPracticePage() {
     setAnsweredCount(0)
     lastCountedIndexRef.current = -1
     setShowExplanation(false)
+    setInputHint(null)
   }, [])
-
-  useEffect(() => {
-    if (pool.length === 0) {
-      loadProblems()
-    }
-  }, [pool.length, loadProblems])
 
   const saveProgress = useCallback((correct: boolean) => {
     setProgress(prev => {
@@ -78,11 +86,15 @@ export function JournalPracticePage() {
   const handleSubmit = () => {
     if (!problems[currentIndex] || result !== null) return
 
-    const correct = checkAnswer(
-      problems[currentIndex],
-      userDebit,
-      userCredit
-    )
+    const d = userDebit.trim()
+    const c = userCredit.trim()
+    if (!d || !c) {
+      setInputHint('借方と貸方の両方に入力してください')
+      return
+    }
+    setInputHint(null)
+
+    const correct = checkAnswer(problems[currentIndex], d, c)
     setResult(correct ? 'correct' : 'incorrect')
     setShowExplanation(true)
     // 同じ問題のリトライでは answeredCount を増やさない
@@ -104,6 +116,7 @@ export function JournalPracticePage() {
       setUserCredit('')
       setResult(null)
       setShowExplanation(false)
+      setInputHint(null)
     } else {
       loadProblems()
     }
@@ -114,9 +127,8 @@ export function JournalPracticePage() {
     setUserCredit('')
     setResult(null)
     setShowExplanation(false)
+    setInputHint(null)
   }
-
-  if (problems.length === 0) return null
 
   const current = problems[currentIndex]
   const isLast = currentIndex === problems.length - 1
@@ -149,33 +161,56 @@ export function JournalPracticePage() {
           <p className="question-text">{current.question}</p>
         </div>
 
-        <div className="answer-form">
+        <form
+          key={current.id}
+          className="answer-form"
+          onSubmit={(e) => {
+            e.preventDefault()
+            handleSubmit()
+          }}
+        >
           <div className="journal-entry">
             <div className="entry-side entry-debit">
-              <label>借方</label>
+              <label htmlFor={`debit-${current.id}`}>借方</label>
               <input
+                id={`debit-${current.id}`}
                 type="text"
                 value={userDebit}
-                onChange={e => setUserDebit(e.target.value)}
+                onChange={e => {
+                  setUserDebit(e.target.value)
+                  setInputHint(null)
+                }}
+                onInput={e => {
+                  setUserDebit(e.currentTarget.value)
+                  setInputHint(null)
+                }}
                 placeholder="勘定科目を入力"
                 list="accounts-list"
                 disabled={result !== null}
-                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
                 autoComplete="off"
+                enterKeyHint="next"
               />
             </div>
             <div className="entry-divider">/</div>
             <div className="entry-side entry-credit">
-              <label>貸方</label>
+              <label htmlFor={`credit-${current.id}`}>貸方</label>
               <input
+                id={`credit-${current.id}`}
                 type="text"
                 value={userCredit}
-                onChange={e => setUserCredit(e.target.value)}
+                onChange={e => {
+                  setUserCredit(e.target.value)
+                  setInputHint(null)
+                }}
+                onInput={e => {
+                  setUserCredit(e.currentTarget.value)
+                  setInputHint(null)
+                }}
                 placeholder="勘定科目を入力"
                 list="accounts-list"
                 disabled={result !== null}
-                onKeyDown={e => e.key === 'Enter' && handleSubmit()}
                 autoComplete="off"
+                enterKeyHint="done"
               />
             </div>
           </div>
@@ -203,18 +238,17 @@ export function JournalPracticePage() {
             </div>
           )}
 
+          {inputHint && result === null && (
+            <p className="input-hint" role="status">
+              {inputHint}
+            </p>
+          )}
+
           <div className="action-buttons">
             {result === null ? (
               <button
-                type="button"
+                type="submit"
                 className="btn btn-primary"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  handleSubmit()
-                }}
-                disabled={!userDebit.trim() || !userCredit.trim()}
-                title={!userDebit.trim() || !userCredit.trim() ? '借方と貸方の両方に入力してください' : undefined}
               >
                 採点する
               </button>
@@ -231,7 +265,7 @@ export function JournalPracticePage() {
               </>
             )}
           </div>
-        </div>
+        </form>
       </main>
 
       <div className="quick-actions">
